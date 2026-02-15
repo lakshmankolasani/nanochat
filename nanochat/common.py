@@ -170,6 +170,7 @@ def compute_init(device_type="cuda"): # cuda|cpu|mps
 
     # Precision
     if device_type == "cuda":
+        torch.set_float32_matmul_precision('medium')  # allows TF32 on Blackwell/Ampere+
         torch.backends.fp32_precision = "tf32" # uses tf32 instead of fp32 for matmuls
 
     # Distributed setup: Distributed Data Parallel (DDP), optional, and requires CUDA
@@ -214,6 +215,7 @@ def get_peak_flops(device_name: str) -> float:
         (["grace blackwell"], 2.5e15),
         (["b200"], 2.25e15),
         (["b100"], 1.8e15),
+        (["gb10"], 209e12),  # DGX Spark (BF16 estimate)
         # NVIDIA Hopper
         (["h200", "nvl"], 836e12),
         (["h200", "pcie"], 836e12),
